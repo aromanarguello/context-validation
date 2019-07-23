@@ -4,4 +4,4 @@ Made with Create React App
 
 ## `npm i`
 
-## `npm star`
+## `npm start`
