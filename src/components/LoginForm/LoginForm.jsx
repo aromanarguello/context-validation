@@ -1,5 +1,6 @@
 import React from "react";
-import LoginContext from "../../context/LoginContext";
+import { LoginConsumer } from "../../context/LoginContext";
+
 import styled from "styled-components";
 
 const Form = styled.form`
@@ -24,54 +25,37 @@ const Button = styled.button`
   background: #3f72af;
   color: white;
 `;
-const passwordValidation = password => {
-  const passwordValidationRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-
-  if (password === "") alert("Enter a Password");
-
-  if (!password.match(passwordValidationRegex)) {
-    alert("Your password sucks");
-  }
-};
 
 const LoginForm = () => {
   const [password, setPassword] = React.useState("");
   const [username, setUserName] = React.useState("");
   const userInputRef = React.useRef(null);
 
-  const handleSubmit = () => {
-    if (username === "") console.log("Enter Username");
-    passwordValidation(password);
-  };
-
   return (
-    <LoginContext.Provider
-      value={{
-        password,
-        username
-      }}
-    >
-      <Form onSubmit={handleSubmit}>
-        <label for="username">Username:</label>
-        <Input
-          id="username"
-          type="text"
-          ref={userInputRef}
-          onChange={({ target: { value } }) => setUserName(value)}
-          value={username}
-        />
-        <label for="password">Password:</label>
-        <Input
-          type="password"
-          id="password"
-          onChange={({ target: { value } }) => setPassword(value)}
-          value={password}
-        />
-        <Button role="button" type="submit" tabIndex={0}>
-          Submit
-        </Button>
-      </Form>
-    </LoginContext.Provider>
+    <LoginConsumer>
+      {({ handleSubmit }) => (
+        <Form onSubmit={handleSubmit(username, password)}>
+          <label for="username">Username:</label>
+          <Input
+            id="username"
+            type="text"
+            ref={userInputRef}
+            onChange={({ target: { value } }) => setUserName(value)}
+            value={username}
+          />
+          <label for="password">Password:</label>
+          <Input
+            type="password"
+            id="password"
+            onChange={({ target: { value } }) => setPassword(value)}
+            value={password}
+          />
+          <Button role="button" type="submit" tabIndex={0}>
+            Submit
+          </Button>
+        </Form>
+      )}
+    </LoginConsumer>
   );
 };
 
